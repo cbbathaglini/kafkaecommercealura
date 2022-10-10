@@ -1,14 +1,7 @@
 package ecommerce;
 
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
-
 import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
+import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -16,15 +9,19 @@ public class NewOrderMain {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        try(var dispatcher = new KafkaDispatcher()) {
-            for (var i = 0; i < 30; i++) {
+        try(var orderdispatcher = new OrderKafkaDispatcher<Order>()) {
+            try(var emaildispatcher = new OrderKafkaDispatcher<String>()) {
+                for (var i = 0; i < 30; i++) {
 
-                var key = UUID.randomUUID().toString();
-                var value = key + ",800,457.4";
-                dispatcher.send("ECOMMERCE_NEW_ORDER", key, value);
+                    var userId = UUID.randomUUID().toString();
+                    var orderId = UUID.randomUUID().toString();
+                    var amount = Math.random() * 5000 + 1;
+                    var order = new Order(userId, orderId, new BigDecimal(amount));
+                    orderdispatcher.send("ECOMMERCE_NEW_ORDER", userId, order);
 
-                var emailvalue = "Thank you for your order! We are processing your order!";
-                dispatcher.send("ECOMMERCE_SENDEMAIL_NEW_ORDER", key, emailvalue);
+                    var emailvalue = "Thank you for your order! We are processing your order!";
+                    emaildispatcher.send("ECOMMERCE_SENDEMAIL_NEW_ORDER", userId, emailvalue);
+                }
             }
         }
     }
