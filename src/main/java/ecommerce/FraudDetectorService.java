@@ -10,22 +10,24 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class FraudDetectorService {
     public static void main(String[] args) throws IOException {
 
         var fraudService = new FraudDetectorService();
-        try(var service = new KafkaService(FraudDetectorService.class.getSimpleName(),"ECOMMERCE_NEW_ORDER", fraudService::parse)) {
+        try(var service = new KafkaService<Order>(
+                FraudDetectorService.class.getSimpleName(),
+                "ECOMMERCE_NEW_ORDER",
+                fraudService::parse,
+                Order.class,
+                new HashMap<>())) {
             service.run();
         }
 
     }
 
-    private void parse(ConsumerRecord<String, String> record) {
+    private void parse(ConsumerRecord<String, Order> record) {
         System.out.println("<-----------------------------------------");
         System.out.println("Processando se houve fraude...");
         System.out.println("key: " + record.key());
