@@ -6,7 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="service-log" />
         <module name="projetokafkaecommerce" />
+        <module name="commons-kafka" />
+        <module name="service-new-order" />
+        <module name="service-email" />
+        <module name="service-fraud" />
       </profile>
     </annotationProcessing>
   </component>
