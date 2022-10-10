@@ -1,7 +1,6 @@
 package ecommerce;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class Order {
     private final String userId, orderId;
