@@ -16,7 +16,9 @@ public class NewOrderMain {
                     var userId = UUID.randomUUID().toString();
                     var orderId = UUID.randomUUID().toString();
                     var amount = Math.random() * 5000 + 1;
-                    var order = new Order(userId, orderId, new BigDecimal(amount));
+                    var emailPerson = Math.random()+1000+"@email.com";
+
+                    var order = new Order(userId, orderId, new BigDecimal(amount),emailPerson);
                     orderdispatcher.send("ECOMMERCE_NEW_ORDER", userId, order);
 
                     var emailvalue = new Email("Processing Order","Thank you for your order! We are processing your order!");
