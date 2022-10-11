@@ -8,6 +8,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 public class KafkaService<T> implements Closeable {
@@ -39,7 +40,13 @@ public class KafkaService<T> implements Closeable {
             }
 
             for (var record : records) {
-                parse.consume(record);
+                try {
+                    parse.consume(record);
+                }catch (ExecutionException e){
+                    e.printStackTrace();
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
             }
         }
     }
