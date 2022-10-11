@@ -1,16 +1,8 @@
 package ecommerce;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.protocol.types.Field;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -43,10 +35,10 @@ public class FraudDetectorService {
         if(isFraud(order)){
             //pretending that the fraud happens when the amount is >= 4500
             System.out.println("Order is a fraud");
-            orderOrderKafkaDispatcher.send("ECOMMERCE_ORDER_DENIED",order.getUserId(), order);
+            orderOrderKafkaDispatcher.send("ECOMMERCE_ORDER_DENIED",order.getEmail(), order);
         }else{
             System.out.println("Order approved: " + order.toString());
-            orderOrderKafkaDispatcher.send("ECOMMERCE_ORDER_APPROVED",order.getUserId(), order);
+            orderOrderKafkaDispatcher.send("ECOMMERCE_ORDER_APPROVED",order.getEmail(), order);
         }
         System.out.println("----------------------------------------->");
     }
